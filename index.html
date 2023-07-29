@@ -8,14 +8,7 @@
     <title>React</title>
   </head>
   <body>
-    <!-- these are 2 cdn links with help of these we have pulled react from cdn and we can use in our project. -->
-    <div>Hello Top</div>
-    <!-- IT WILL RENDER SAME -->
     <div id="root"></div>
-    <!-- IT WILL RENDER ACCORDING TO APP.JS WHATEVER WOULD BE RENDERED IN THAT FILE WILL BE SHOWN HERE, ANYTHING PRESENT IN THIS DIV WILL BE REPLACED BY RENDER FROM APP.JS FILE -->
-    <div>Hello Bottom</div>
-    <!-- IT WILL RENDER SAME -->
-
     <script
       crossorigin
       src="https://unpkg.com/react@18/umd/react.development.js"
@@ -24,10 +17,6 @@
       crossorigin
       src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
     ></script>
-
-    <!-- i have moved my script code from 2-insertingReactInProject to my App.js file to make index.html file readable we cnt just write entire code in index.html -->
-
     <script src="./App.js"></script>
-    <!--  ORDER IS IMPORTANT IF YOU MOVE THIS APP.JS SCRIPT ABOVE THE 2 SCRIPT CODE WILL THROW AN ERROR SAYING REACT IS NOT DEFINED. -->
   </body>
 </html>
