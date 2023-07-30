@@ -9,6 +9,9 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- using cdn links was 1 way of importing react in our project but this is not
+    very good way. SO we will install react and react-dom via npm
     <script
       crossorigin
       src="https://unpkg.com/react@18/umd/react.development.js"
@@ -16,7 +19,9 @@
     <script
       crossorigin
       src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
-    ></script>
-    <script src="./App.js"></script>
+    ></script> -->
+
+    <!-- as we installed react and react-dom we no longer require cdn links -->
+    <script type="module" src="./App.js"></script>
   </body>
 </html>

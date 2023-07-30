@@ -1,0 +1,158 @@
+We actually use to do npx-create-react-app which automatically install npm, but we didn't do this , this time.
+we manually installed npm by npm init command.
+after this package.json file was made in our project. So package.json file is basically a CONFIGURATION FOR OUR NPM.
+
+
+full form of npm is not node package manager, if u visit the npm site you will get to know. It is everything except node package manager. it has NO FULL FORM.
+npm is basically package manager but full form is not node package manager always remember. As it manages all the packages we will install in our system. Sometimes 
+these packages are also called DEPENDENCIES. It will take care of all the packages and their version in this package.json file.
+
+The most IMPORTANT PACKAGE/DEPENDENCY in a system is BUNDLER. We have different files like html, css,js file our whole code need to be bundled/minifies/catched/compressed/clean
+before it need to send to production, this all is done by bundler. Some of the bundlers are - webpack, parcel, vite. So bundler bundles the whole app together and 
+make it a production ready code.
+
+When we do create-react-app it used WEBPACK as bundler to bundles all the file and make it production ready app. it used webpack and babel at back of the scenes.
+
+There are 2 types of dependencies:
+1. DEV DEPENDENCIES - These dependencies are required in a development phase. When we are developing our app then we need dev dependencies.
+2. DEPENDENCIES(SIMPLE) - These are used in production also.
+
+In this project we will use parcel as bundler. via npm install parcel
+BUT WE WANT PARCEL AS DEV DEPENDENCY NOT NORMAL DEPENDENCY
+so we will use npm install -D parcel  (D is for DEV dependencies).
+this will install the above like this below,
+"devDependencies": {
+    "parcel": "^2.9.3"
+  }
+NOW CAREFULLY SEE there is ^ used before version number what is this and why it is used ?
+^ is called caret - this is used for whenever there will be minor upgrade in parcel version like from 2.9.3 to 2.9.4 or 2.9.9 not 3.0.0 (this is major upgrade) if caret will be present 
+it will automatically upgrade our parcel version.
+
+SOMETIMES ~ this is also used in front of version number,
+~ is called tilde - this is used for major upgrade in version like to version 3.0.0 if tilde is used it will automatically will do major upgrade in the version. BUT THIS 
+SHOULD BE NOT BE USED AS MAJOR UPGRADE CAN DISRUPT YOUR PRODUCTION READY CODE.
+
+WHEN WE INSTALL THIS TWO MORE FILE APPEAR THAT IS
+
+
+1.) package-lock.json
+
+this file keep record of exact version of dependencies in it. In this file version doesn't have caret or tilde in front of them. It keep track of exact version used in project.
+
+IN package-lock.json parcel is like this,
+
+ "parcel": {
+      "version": "2.9.3",
+      "resolved": "https://registry.npmjs.org/parcel/-/parcel-2.9.3.tgz",
+      "integrity": "sha512-2GTVocFkwblV/TIg9AmT7TI2fO4xdWkyN8aFUEVtiVNWt96GTR3FgQyHFValfCbcj1k9Xf962Ws2hYXYUr9k1Q==",
+      "dev": true,
+      "requires": {
+        "@parcel/config-default": "2.9.3",
+        "@parcel/core": "2.9.3",
+        "@parcel/diagnostic": "2.9.3",
+        "@parcel/events": "2.9.3",
+        "@parcel/fs": "2.9.3",
+        "@parcel/logger": "2.9.3",
+        "@parcel/package-manager": "2.9.3",
+        "@parcel/reporter-cli": "2.9.3",
+        "@parcel/reporter-dev-server": "2.9.3",
+        "@parcel/reporter-tracer": "2.9.3",
+        "@parcel/utils": "2.9.3",
+        "chalk": "^4.1.0",
+        "commander": "^7.0.0",
+        "get-port": "^4.2.0"
+      }
+}
+NOW SEE CAREFULLY why is hash used in integrity, WE HAVE HEARD SOMETIMES, CODE WORKS GOOD ON LOCAL BUT NOT ON PRODUCTION, HERE COMES HASH IN PLAY.
+HASH VERIFY THAT WHATEVER VERSION IS THERE IN MY MACHINE THE SAME VERSION IS DEPLOYED ON PRODUCTION. THATS Y PACKAGE-LOCK.JSON IS VERY IMPORTANT FILE.
+
+SO DIFFERENCE between package.json and package-lock.json is => 
+package.json can have caret and tilde and can have major/minor upgrade but package-lock.json cannot have them, they keep record of exact version used and 
+package-lock.json is important to match same version at deployment and local via hash function in integrity.
+
+
+
+2.) node_modules
+
+this basically contain all the code that we fetched from npm. node_modules have so many files because as our project has dependency parcel likewise parcel as project
+has other dependency, that dependency as project has another dependency and it keep going and this is known as TRANSITIVE DEPENDENCIES, so when we say to install dependency parcel to npm, parcel tell npm to install
+its dependencies also, and its dependencies also say to install their dependencies and loop goes on so all the files are imported which gonna be used to make parcel function.
+
+QUESTION ARIES - how will npm know what are dependencies of parcel and what are dependencies of parcel dependencies, and their dependencies and so one ?
+
+if u go in node_modules, there are several folder they are all projects, if you open any folder you will find package.json in that file you will find all the dependencies of the that project
+we have opened. Every folder is a project and contain a package.json file where its own dependencies are listed. so npm comes to know from that what all to install and what not.
+SO ONE PROJECT HAVE MORE THAN 1 PACKAGE>JSON FILE. VERY IMPORTANT as every folder in node_modules contain package.json.
+
+node_modules size is so big, same as this project. DO WE PUT THIS IN GIT OR PRODUCTION ? ANSWER IS NOOO.
+we will use git ignore. SO WE WILL MAKE A NEW FILE .gitignore. Anything inside that file will not go on git or production. BUT the question come how will code run on production
+without dependencies which were in node_modules. 
+ANSWER is if u have package.json file you can recreate node_modules anytime.Even if u delete your node_modules u can recreate it as we have package.json and package-lock.json file
+with us.
+SO SIMPLY ANYTHING YPU CAN REGENERATE DO NOT PUT ON GIT. GIT ONLY MUST HAVE ESSENTIAL THINGS.
+
+
+NOW TO RUN THE APP WITH HELP OF PARCEL WE DID THIS,
+npx parcel index.html
+
+to install the packages we use npm commands such as npm install.
+to execute a package we do npx parcel <package _name> like npx parcel index.html.
+
+
+using cdn links was 1 way of importing react in our project but this is not very good way 
+ <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"
+    >
+</script>
+because fetching from cdn is expensive operation as it will first hit unpkg.com (cdn links include this) then will fetch there and give to us.
+IF we have react in out node_modules it would be very easy to use react in our project so we dnt have to make call to unpkg.com.
+if we carefully see in cdn link we have react@18 tomorrow if new version comes we would need to keep changing URL otherwise react would not update. So
+it better to have in package.json where it would be easy to manage all the dependencies and it will be easy to manage and upgrade react easily.
+NOW WILL BE REACT AS PACKAGE IN OUR CODE. => npm install react. => we are not using -D, like npm install -D react because i need react as normal dependency 
+not as an dev dependency.
+AS IN CDN links we had 2 files react and react-dom here also we need to install react and react-dom. => npm install react-dom
+
+when we installed react and react-dom we removed our cdn links. Now we have installed react but we never defined it. so to define it we will use import.
+Thats why we use import React from 'react' and import ReactDom from 'react-dom'
+After importing these in our js file and then when we try to start server and run the code we get an error again. BROWSER SCRIPTS CANNOT HAVE IMPORTS OR EXPORTS.
+this is coming over line <script src='App.js'></script> because it is considering this as normal javaScript(browser script) but is it not normal javaScript(browser scripts) this is module now and 
+normal javaScript (browser script) can not have import and exports thats y we are getting this error. Now we need to tell it that this is not browser script, it is 
+a module now and we can tell it as <script type="module" src='App.js></script>
+
+After we when server starts now react is not coming from cdn links its coming from node_modules the package which we installed as dependency.
+
+QUESTION - WHAT IS PARCEL DOING OR WHAT BUNDLE DOES ?
+1. parcel made a dev build for us.
+2. then created a local server for us and hosted our dev build at that local server.
+3. It is automatically refreshing the browser whenever we save code on vscode and show result at browser that is we do not need to refresh browser parcel does that for us.
+   this is called HMR - HOT MODULE REPLACEMENT. this HMR is done by parcel with help of FILE WATCHING ALGORITHM which is written in C++.
+4. It gives us faster build because of caching. Parcel is also doing caching so it give us faster build that is build is made in milliseconds. And if u see in your project
+   there is a folder .parcel-cache this is a place where parcel is doing all the caching.
+5. Image Optimization - most expensive thing in web browser is to load images and parcel do image Optimization also for us.
+6. Minification of file - when we make a production ready file it will minify/bundle/optimize our files.
+7. Compress - It compresses our app, removes all white spaces.
+8. Consistent Hashing
+9. Code Splitting
+10. Differential bundling - our react app opens in internet explorer or older version of internet explorer or in chrome or firefox or mobile browser so parcel provide different
+    bundle for this and all this is handled by parcel.
+11. diagnostic of the app.
+12. Error handling - error is clearly shown on screen not only on console and give better error handling solution.
+13 HTTPS support - right now on local server app is hosted on http but parcel also give us option to host on HTTPS.
+14. TREE SHAKING ALGORITHM
+15. Different Dev and production bundle - as production build take more time than dev build
+TO MAKE A BUILD RUN THIS - npx parcel build index.html (this will make production build) (production build take more time than dev build)
+when we run npx parcel index.html (this make dev build and host it)
+so when we refresh page or save our code, dist and parcel-caching work hand in hand to update us.
+EVEN IF WE DELETE dist or parcel-caching it WILL BE AUTOMATICALLY MADE AGAIN WHEN BUILD IS MADE.
+QUESTION COMES - WHERE WILL THIS BUILD GO ?
+It will go in the folder dist, already in our project.
+
+ONE VERY GOOD EXAMPLE IS - 
+MODI IS REACT, AMIT SHAH IS PARCEL AND FINANCE MINISTER AND HEALTH MINISTER AND EDUCATION MINISTER AND ANY OTHER MINISTER ARE ALL THE PACKAGES IN node_modules.
+THESE ALL WORK TOGETHER TO MAKE OUR APP FAST NOT ONLY REACT MAKE IT FAST THESE ALL ARE NEEDED TO MAKE OUR APP FAST.
+
+TO MAKE OUR REACT CODE/ APP COMPATIBLE WITH OLDER VERSION OF BROWSER WE NEED TO DO SOME CONFIGURATION AND IT WOULD BE DONE BY BrowserList PACKAGE IN node_modules.
+AND THIS WE NEED TO TELL BrowserList WHICH ALL VERSION TO BE SUPPORTED AND THIS ALL WILL BE DONE N PACKAGE.JSON FILE. whatever we will list in that dependencies
+in package.json in BrowserList that will 100% work which are not listed there might or might not work. WHAT TO WRITE IN ITS DEPENDENCIES CAN BE SEEN ON browserlist.dev site.
+it actually add extra code to make it work on older version making our app heavy so should not add for quit older version.
