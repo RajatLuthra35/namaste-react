@@ -1,0 +1,120 @@
+TO MAKE OUR BUILD/START OUR SERVER WE NEED TO WRITE npx parcel index.html. BUT WE DONT WANT TO WRITE AGAIN AND AGAIN LONG THING SO WE WILL MAKE A SCRIPT ABOUT IT IN PACKAGE.JSON FILE.
+IN PACKAGE.JSON THEIR WILL BE AN OBJECT CALLED SCRIPTS LOOKING LIKE THIS,
+ "scripts": {
+    "test": "jest"
+  },
+WE WILL ADD OUR START SCRIPT IN THIS, LIKE THIS,
+ "scripts": {
+    "start": "parcel index.html",
+    "test": "jest"
+  },
+  NOW WE WILL ONLY type npm start and our build/server will start. HERE THIS START SCRIPT IS WROTE FOR DEV BUILD. NOW WE WIL WRITE FOR PROD BUILD.
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html",
+    "test": "jest"
+  },
+
+  NOW TO START OUR SERVER/BUILD WE WILL WRITE npm run <script name> => npm run start - this will start our server or make a dev build.
+  similarly npm run build - will make a prod build.
+  NOW NPM GIVE US A SHORTCUT, WE CAN ONLY WRITE NPM START. WORKS SAME AS ABOVE. IT ONLY WORKS FOR START IT DOESN'T WORK FOR ANY OTHER.
+
+
+  JSX and React are different. MANY THING JSX IS USED IN REACT BUT NO. we can build entire application with react like using react.createElement etc methods nut JSX make our life easier.
+  JSX IS NOT HTML INSIDE JS. JSX IS HTML-LIKE OR XML-LIKE SYNTAX.
+
+REACT HEADING = React.createElement(
+  "h1",
+  { id: "heading" },
+  "Hello World!"
+); => creating react element using core react.
+
+JSX HEADING = <h1 id="heading"> Hello World!</h1> => creating react element using jsx.
+
+THESE BOTH HAVE SAME RESULT.BOTH INDIVIDUALLY ALSO CAN BE USED TO MAKE ENTIRE APP.
+If u console react heading and jsx heading both are of type OBJECT. same as before.Both are same.
+this is the difference between react and jsx, syntax.
+THEREFORE REACT IS different AND JSX IS different.
+
+JS engine/browser understand js not jsx. js engine understand ECMA script that we call es6 - es is ecma script, pure javaScript.
+browser doesn't understand JSX, therefore browser wont understand <h1 id="heading"> Hello World!</h1> as this is not valid pure javaScript.
+SO QUESTION COMES - how is the jsx code working ?
+ANSWER - parcel is doing this. parcel is working behind the scene to make it work. When we code and save it so before code go to browser it is TRANSPILED(code is converted in a format browser can understand)
+then js engine receive the code browsers can understand.TRANSPILING is done by Parcel, it is exactly not done by parcel as parcel is manager it passes this transpiling work
+to one of its ministers and that minister is babel. SO BABEL is the one that transpile this code.Babel is a PACKAGE which was installed by parcel it is basically javaScript complier
+also known as TRANSPILER. BABEL is NOT CREATED BY FACEBOOK.
+
+LETS SEE SOME BACK OF THE HAND SCENES.
+1. React.createElement works => its an JS object which is rendered as HTML ELEMENT. This is how react.createElement works.
+
+2. JSX element works => when we write JSX code -> it is then transpiled to react.createElement by BABEL -> then it is made to JS element what we call as JS object ->then rendered on to DOM as HTML ELEMENT.
+
+Therefore JSX at the end of the day is react.createElement that is why when we console both react.createElement heading and JSX heading both comes out to be same object.
+
+Some browsers do not understand es6 js BABEL comes here as saviour as it convert our code into lower version that browser can understand.
+
+
+if we want to give class in HTML we use class => <div class="root"></div>
+But IN JSX we need to give className => <h1 className="heading">Hello </h1>
+in html attributes are given normally but in JSX attributes are given in camel case. className, tabIndex (in JSX) || class, tabindex (in HTML)
+
+
+REACT ELEMENT -> const jsxHeading = <h1 id="heading">Hello World from JSX!</h1>;
+EVERYTHING IN REACT IS A COMPONENT. SO LETS SEE WHATS A COMPONENT.
+
+REACT COMPONENT -> These are of 2 types
+1. class based
+2. functional components.
+
+Functional Components - It is simple javaScript Function which return some piece of jsx element. THATS IT. There need to be started with capital letter. First alphabet of react functional components should be capital.
+example => const HeadingComponent = () => {
+    return <h1>Namaste React Functional Component </h1>;
+}  this is react functional component, first alphabet as capital(this is react way of knowing this is a component) and returning some piece of jsx.
+
+
+So in conclusion -
+This is REACT ELEMENT.
+const jsxHeading = <h1 id="heading">Hello World from JSX!</h1>;
+
+THIS IS REACT COMPONENT.
+const HeadingComponent = () => {
+    return <h1>Namaste React Functional Component </h1>;
+} 
+
+QUESTION COMES HOW TO RENDER IT ?
+FOR REACT ELEMENT - root.render(jsxHeading).
+FOR REACT COMPONENT - root.render(HeadingComponent) => this will not work. as this only works for React ELement. So for this we need to do this, root.render(<HeadingComponent />) => VERY IMPORTANT
+
+
+COMPONENT COMPOSITION - Putting one component inside another, example -
+
+const Title = () => {
+    return <h1>Hello world</h1>
+}
+
+const Head = () => {
+   return (
+        <div> 
+            <Title />                       HERE WE PUT ONE COMPONENT INTO ANOTHER.
+            <h1>Hello World 2</h1>
+        </div>
+    )
+}
+THIS IS CALLED COMPONENT COMPOSITION.
+
+IF WE WANT TO ADD REACT ELEMENT INSIDE OF COMPONENT THEN ?
+use {} , using this we can add any javascript in our component.
+
+const title = (
+    <h1 className="head"> Hello </h1>
+)
+THIS IS ELEMENT.
+
+const HeadingComponent = () => {
+    return (
+        <div className="container"> 
+        {title}                                                 // with this we can insert any element, we can add any JS code inside component.
+        <h1 className="heading"> Hello react </h1>
+        </div>
+    )
+}
