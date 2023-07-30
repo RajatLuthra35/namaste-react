@@ -1,0 +1,12 @@
+CONFIG DRIVEN UI - Website driven by data, our website is driven by configs. example => like swiggy there are some offers in bangalore, different in delhi, different in punjab
+but website is same, these website are driven by data or config we can say. these are config driven UI. what is config, data in api is the config.
+
+
+if there are two text together coming from api and you want them to separate with , or - then do this,
+data.join(",") this will separate data by ,
+data.join("-") thus will separate data by -
+
+when ever you use map in react always give a key in it => because it give a unique identity to every item. NOW QUESTION COMES WHY WE NEED IT?
+Imagine we have list of restaurants cards and a new restaurant card is added if there would be no key react wont know which new restaurant is added and where to put that
+restaurant card so it will render all the restaurant already present.But if we give each of them a unique id then react will already know which card has come new and whats
+its id and it will accordingly put it in the list, so it will only 1 restaurant card rather than all. This is best optimization of app.
