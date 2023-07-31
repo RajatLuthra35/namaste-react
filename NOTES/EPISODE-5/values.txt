@@ -1,0 +1,45 @@
+React hooks are nothing just javaScript function given to us by react
+
+when ever a state variable updates, react re-render the component.
+jaha per bhi state variable update hua hai, us component ko re render kr dega react.
+
+Question is HOW REACT DOES THIS?
+ANSWER - React uses RECONCILIATION ALGORITHM also called REACT FIBER
+ANYTHING THAT CHANGES ON UI IS CALLED RECONCILIATION.
+Suppose there is res-container which contain 7 res-cards and upon filtering on specific condition(filter function)
+3 res-cards remain. NOW HOW IS THIS DONE?
+what react does is firstly react will make a VIRTUAL DOM.
+WHAT IS DOM -> DOM IS TAGS. Like <div>, <img> nested tags etc.
+VIRTUAL DOME -> representation of actual dom.
+In this project we have body component <Body />, This is a virtual dom.
+Entire component which return proper tags is actually VIRTUAL DOM.
+if you console this we will get,
+same object what we use get when we console React.createElement
+so react consider all this as big object.
+
+TO KNOW ANSWER TO PREVIOUS QUESTION WE NEED TO UNDERSTAND WHAT IS DIFF ALGO?
+React uses DIFF ALGO, IT TRY OUT TO FIND OUT DIFFERENCE BETWEEN OLD VIRTUAL DOM AND NEW VIRTUAL DOM AND THEN IT WILL ACTUALLY
+UPDATE THE DOM ON EVERY RENDER CYCLE.THIS IS DONE BY REACT AND THIS MAKE REACT FAST.
+FINDING OUT DIFFERENCE BETWEEN TWO HTML CODE IS DIFFICULT, FINDING OUT DIFFERENCE BETWEEN 2 OBJECT IS FAST.
+whatever ui we make, react keep track of all of it as object called as VIRTUAL DOM then whenever state is updated a new object is formed,
+then react finds out difference between these two objects(firstly there were 15 restaurants now there are 7 restaurants so difference is found by react)
+using diff algo then it actually update the DOM.React doesn't touch the dom alot.it play with virtual dom.THAT IS WHY REACT IS FAST.
+REACT DOES EFFICIENT DOM MANIPULATION AS IT HAS VIRTUAL DOM AND IT UPDATE THE DOM(UI).
+
+
+
+STATE VARIABLE - 
+const [listOfRestaurants, setListOfRestaurants] = useState(resList);
+here listOfRestaurants is a variable, setListOfRestaurants is a FUNCTION. Which is used to update the state.
+CAREFULLY SEE WHAT THE ABOVE STATE IS => is is actually ARRAY DESTRUCTURING.
+
+const [listOfRestaurants, setListOfRestaurants] = useState(resList) 
+AND
+const arr = useState([]);
+const [listOfRestaurants, setListOfRestaurants] = arr
+THESE BOTH ARE SAME.IT JUST ARRAY DESTRUCTURING.
+WHAT DOES useState give? => ARRAY.
+
+QUESTION - Why do we need both, why cant we just have one?
+variable we need , the function there is actually a trigger for DIFF ALGO, this triggers it, then react finds difference between 2 object
+and the update the DOM therefore the state and therefor the UI(re-render the component).
