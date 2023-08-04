@@ -1,0 +1,65 @@
+MONOLITH ARCHITECTURE - In earlier years projects were made with this algorithm.In this project use to be very big and heavy as everything would be inside 1 project.
+Like 1 Big project in a particular language which has several parts such as, API project also inside it, UI project also inside, Auth project also inside, DB also inside etc. SO everything
+use to be inside 1 big project so when it has to be deployed everything need to be deployed even if there is change in on part of project, entire project need to be 
+deployed and main issue is if the whole project is on java then every small part of it needs to be done in java.
+
+IN TODAYS TIME, 
+
+world is moving towards MICROSERVICES ARCHITECTURE.
+
+In MICROSERVICES ARCHITECTURE we have different services for different job.Like we BE service, UI service, auth service, service for DB, service for SMS sending, service for email notification.
+These all microservices combine together and form a big app.All these micro services talk to each other according to use cases.For every small thing there is different project/services. 
+This is called SEPARATION OF CONCERNS. It follows SINGLE RESPONSIBILITY PRINCIPLE where each service has its own job.
+These services talk to each other to get work done.Biggest advantage here is different services can be coded in different languages. like ui in react, BE in java, database in python, sms service in golang.
+NAMASTE REACT IS UI microservice.
+
+QUESTION COMES - HOW THESE SERVICES TALK TO EACH OTHER ?
+ANSWER - Each services is deployed on different port, like rn our ui is deployed on localhost:1234 like wise different services is deployed on different ports.
+example - port :1234 -> ui service
+          port :1000 -> be service  
+          port :3000 -> sms service
+on different port we can deploy different services and they all can be mapped to domain name.
+like BE service is mapped to /api domain, SMS service mapped to /sms domain. SO these service make call to different URls to talk to each other.
+
+There are 2 approaches to follow when fetching data from BE.
+
+1. page loads -> API call -> render
+
+2. page loads -> Render whatever UI we can -> API call -> Render.
+
+Best approach is SECOND. 
+In FIRST approach for 500ms while api calls happens page seems like frozen and suddenly everything appears this is a BAD UX.
+IN SECOND approach we might think this is complicated as we are rendering it.But thats the beauty of react as its render cycle is very quick. BETTER UX.
+
+
+HOW useEffect() hooks works?
+useEffect has 2 parts, useEffect( ()=>{}, [] )
+1. callback function
+2. dependency array.
+if we have a component, firstly that component renders(return part of that component) then useEffects callback function is called.
+if we want to do something after component is rendered then write it inside useEffect function.
+Take example of <Body /> component everything will render first, even state variable will be set, everything outside useEffect will render, any console.log() thats in the component like outside useEffect and before return part ,
+everything in return part also then useEffect will be called. State variable will have the value(default value) 
+before useEffect is called. YOU CAN VERIFY PUTTING DEBUGGER.
+
+SO this help us in using our second approach talked above. We will call fetchData() function which fetches data from api in useEffect as firstly whole component will be rendered,
+there by UI is done, then useEffect will be called and in useEffect we have our fetchData() function it will be called so it will fetch data and render on screen.`
+
+Handle API -> 2 methods.
+1. .then -> this is traditional method where we make a api call and handle response in .then() and do error handling via .catch(). => OLD METHOD.
+2. Async await -> This is new and better method. 
+
+
+CONDITIONAL RENDERING - RENDERING ON THE BASED OF CONDITION.
+
+
+const [btnNameReact,setBtnNameReact] = useState('Login') 
+if you see above carefully, QUESTION COMES - HOW IS CONST VARIABLE btnNameReact Changing as it is constant it should not change so how its changing ?
+ANSWER - when we use function(setBtnNameReact) to update the state react re render the entire component. so when its re render btnNameReact variable is created again
+with new/updated value that we have set in function(setBtnNameReact) so technically it doesn't change value of const variable it actually re render the 
+entire component and so then variable is created again but with the updated value. When component is re rendered DIFF ALGO works and see whats the difference and see 
+which element changes and then update only that element, other element in HTML. This all happens at back of scene and THATS Y WE NEED STATE VARIABLE.
+
+
+VERY VERY VERY IMPORTANT
+WHENEVER STATE VARIABLE UPDATES, REACT TRIGGERS RECONCILIATION CYCLE( RE-RENDER THE COMPONENT).
