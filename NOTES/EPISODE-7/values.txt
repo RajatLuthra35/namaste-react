@@ -1,0 +1,115 @@
+It there is no dependency array in useEffect so useEffect will run on every render of the component.
+If there is [] dependency array in useEffect so useEffect will run on initial render (just once) when component is rendered for the first time.
+
+
+FOR NAVIGATING TO DIFFERENT PAGE - USING react-router-dom => npm i react-router-dom      =>we are using the latest version in this project.
+
+Whenever we need to make routes we need to make routing configuration and this is shown below,
+configuration means what will happen on specific route
+Firstly import createBrowserRouter this is make a routing configuration for us like this, configuration is passed inside createBrowserRouter
+const appRouter = createBrowserRouter([
+  { path: "/", element: <AppLayout /> },
+  { path: "/about", element: <About /> },
+]);
+here we made routing configuration for us and we will keep adding more routes here.
+after we made a configuration we need to provide this configuration to render it on our project. So for this we need to import RouterProvider from react-router-dom.
+This RouterProvider will provide this above made configuration to our app.
+We were doing this in app.js ,
+root.render(<AppLayout />) => we were directly rendering AppLayout component but it didn't have any routes, so now we have to change it. SO now,
+
+root.render(<RouterProvider router={appRouter} />) => here we provided our configuration that we made via RouterProvider provide so that it can render and we can use the routes.
+NOW ROUTES WILL WORK.
+
+react-router-dom provide a very good hook => useRouteError hook(used in Error component of the project) this hooks helps us to display the better error rather than we defining ourself.
+
+
+Firstly we had a header component that ise to only appear above body component but when we use to route to another component such as About.js or Contact.js, header component is not there,
+that this stage configuration of routes were like - 
+const appRouter = createBrowserRouter([
+  { path: "/", element: <AppLayout />, errorElement: <Error /> },
+  { path: "/about", element: <About /> },
+  { path: "/contact", element: <Contact /> },
+]);
+NOW WE WANT TO HAVE HEADER COMPONENT AT EVERY OTHER COMPONENT, SO WE NEED TO CHANGE THE ABOVE CONFIGURATION, AND AN IMPORTANT CONCEPT - CHILDREN ROUTES.
+we need to pass CHILDREN ROUTES in "/" path, SO NEW CONFIGURATION BECOMES LIKE,
+const appRouter = createBrowserRouter([
+  {
+    path: "/",
+    element: <AppLayout />,
+    children: [
+      { path: "/", element: <Body /> },
+      { path: "/about", element: <About /> },
+      { path: "/contact", element: <Contact /> },
+    ],
+    errorElement: <Error />,
+  },
+]);
+HERE OUR PARENT COMPONENT HAVE CHILDREN ROUTES, BUT STILL WE DNT SEE HEADER ON DIFFERENT ROUTES, BECAUSE LETS SEE OUR AppLayout FUNCTION.
+const AppLayout = () => {
+  return (
+    <div className="app">
+      <Header />
+      <Body />
+    </div>
+  );
+};
+THIS IS OUR AppLayout FUNCTION WHAT IS WANT IS ->
+  const AppLayout = () => {
+  return (
+    <div className="app">
+      <Header />
+      {/* if path = "/" */}
+      <Body />
+      {/* if path = "/about" */}
+      <About />
+      {/* if path = "/contact" */}
+      <Contact />
+    </div>
+);
+WE WANT THIS, WE NEED CONDITIONS HERE, WE NEED TO LINK OUR COMPONENT WITH SPECIFIC ROUTE IN AppLayout FUNCTION. SO TO DO THIS, react-router-dom COMES FOR RESCUE WITH A HOOK -> OUTLET
+OUTLET IS VERY IMPORTANT HOOK. WHAT IT DOES IS THAT, WHENEVER THERE WILL BE CHANGE IN PATH(ROUTE) IT WILL AUTOMATICALLY PLACE THAT COMPONENT ON ITS PLACE. SO OUR AppLayout FUNCTION BECOMES,
+const AppLayout = () => {
+  return (
+    <div className="app">
+      <Header />
+      <Outlet />
+    </div>
+  );
+};
+SO WHENEVER THE ROUTE WILL CHANGE OUTLET WILL AUTOMATICALLY LOAD THE CHILDREN WE PASSED IN OUR CONFIGURATION AT ITS OWN PLACE.
+WE WILL NEVER SEE OUTLET IN HTML, AS THIS OUTLET IS REPLACED BY THE COMPONENT.
+
+SO NOW WE HAVE SUCCESSFULLY MADE ROUTES. LETS NOW MAKE LINK. That is when we click on About us on Header component then it should redirect us to /about route and that component at that route.
+
+ADDING LINKS ->
+So common thing comes to mind, to do this we can use <a href="/about" /> this will route us to /about route and load that component at that route. This WORKS. It will route us to that url and load the component. BUT WHEN IN REACT
+NEVER USE <a>(ANCHOR TAG) TO ROUTE TO ANOTHER PAGE.
+QUESTION COMES - WHY ?
+ANSWER - BECAUSE WHEN WE WILL GO THE ROUTE PROVIDED IN ANCHOR TAG THE WHOLE PAGE WILL BE REFRESHED.
+BUT we do not want to refresh the page but still want to route to different page AS THIS WILL MAKE THE APP FASTER. => THIS CAN BE DONE BY LINK PROVIDED BY react-router-dom.
+
+THERE ARE 2 TYPES OF ROUTING -
+1. Client Side Routing 
+2. Server Side Routing -> We have index.html, about.html, contact.html, if i click on my anchor tag(<a href="/about" />), it reload the whole page, it send the network call to about.html(hit a server) fetches that html
+    and renders it to the webpage. This how server side routing work.
+
+When we use <Link /> we do not refresh our page, thereby we are doing client side routing not server side routing AS when we refresh the page first time it already has the code for
+about and contact and when we route it just simply loads that component, it doesn't require to fetch that page as it already is there.
+REACT IS THE SINGLE PAGE APPLICATION AS ONLY COMPONENT ARE GETTING RENDERED WE DO NOT MAKE NETWORK CALL TO FETCH OTHER PAGES.
+
+
+DYNAMIC ROUTING -
+Now we want to display the menu of different restaurants on clicking the restaurants card and we want url with restaurants id in it. so we will use dynamic routing. To tell react route is dynamic
+we do this,
+{ path: "/restaurants/:resId", element: <RestaurantMenu /> },
+CAREFULLY SEE, WE USE (:) AFTER /restaurants this tell react that we are making dynamic routes. Here resId is dynamic and can be changed according to restaurant.
+
+For DYNAMIC ROUTE TO WORK we need to get the id we are passing in the URL. AS WE HAVE DEFINED IN configuration       { path: "/restaurants/:resId", element: <RestaurantMenu /> },
+in this url we have told anything after /restaurant is resId and we will get that on desired page via useParams() hook from react-router-dom.
+const {resId} = useParams() => this way we get the id from url. REMEMBER THIS IS NOT SAME AS GETTING ANYTHING FROM URL, HERE WE HAVE ACTUALLY TOLD THE ROUTE, IN PAYTM WE USE SEARCHQUERY FUNCTION
+THAT HELPS US TO GET ANYTHING FROM URL.
+
+REMEMBER when we said don't use anchor tag, we should use LINK from react-router-dom, BUT IF WE check in the dom(elements in developer tools in chrome) we will see <Link> is using <a> tag behind the scene,
+You wont see Link in html u will see <a> tag getting used. SO CONCLUSION - <Link> is powerful component provided by react-router-dom which actually uses anchor(<a>) tag behind the scenes.
+SO QUESTION COMES WHATS THE DIFFERENCE - LINK is actually wrapper over anchor tag. So when we make Link for a component react-router-dom keep the track of that component so that react do not have to 
+refresh the page.HTML, browser, JS dnt understand Link, LINK is the tool provided by react-router-dom so to make HTML, browser JS understand what we mean Link actually uses anchor tag behind the scenes.

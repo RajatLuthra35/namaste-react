@@ -1,6 +1,7 @@
 import RestaurantCard from "./RestaurantCard";
 import { useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
+import { Link } from "react-router-dom";
 const Body = () => {
   const [listOfRestaurants, setListOfRestaurants] = useState([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
@@ -24,7 +25,6 @@ const Body = () => {
     setFilteredRestaurants(
       json?.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle?.restaurants
     );
-    console.log(json);
   };
 
   return listOfRestaurants?.length === 0 ? (
@@ -79,7 +79,14 @@ const Body = () => {
           OLD METHOD
           */}
         {filteredRestaurants.map((restaurant) => {
-          return <RestaurantCard resData={restaurant} />;
+          return (
+            <Link
+              key={restaurant.info.id}
+              to={"/restaurants/" + restaurant.info.id}
+            >
+              <RestaurantCard resData={restaurant} />
+            </Link>
+          );
         })}
 
         {/*

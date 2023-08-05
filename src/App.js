@@ -2,6 +2,11 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import Body from "./components/Body";
 import Header from "./components/Header";
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+import About from "./components/About";
+import Contact from "./components/Contact";
+import Error from "./components/Error";
+import RestaurantMenu from "./components/RestaurantMenu";
 
 /* 
 const heading = React.createElement(
@@ -44,14 +49,29 @@ THIS ALL WAS FOR UNDERSTANDING, NOW LETS BUILD THE PROJECT.
 */
 
 const AppLayout = () => {
-  console.log(<Body />);
   return (
     <div className="app">
       <Header />
-      <Body />
+      <Outlet />
     </div>
   );
 };
+const appRouter = createBrowserRouter([
+  {
+    path: "/",
+    element: <AppLayout />,
+    children: [
+      { path: "/", element: <Body /> },
+      { path: "/about", element: <About /> },
+      { path: "/contact", element: <Contact /> },
+      { path: "/restaurants/:resId", element: <RestaurantMenu /> },
+    ],
+    errorElement: <Error />,
+  },
+]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<AppLayout />); // way of rendering functional component is also different.
+// root.render(<AppLayout />); // way of rendering functional component is also different.
+// we used this when there were no routes, now we need routes so we need to provide the configuration we make above to the app to render thats done below.
+
+root.render(<RouterProvider router={appRouter} />);
