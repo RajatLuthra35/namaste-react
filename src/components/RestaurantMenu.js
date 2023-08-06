@@ -61,11 +61,14 @@ const RestaurantMenu = () => {
 
   return (
     <div className="menu">
-      <h1>{name}</h1>
-      <p>
-        {cuisines.join(", ")} - {costForTwoMessage}
-      </p>
+      <div className="m-4 p-4 rounded-lg bg-gray-100 hover:bg-gray-200">
+        <h1>{name}</h1>
+        <p>
+          {cuisines.join(", ")} - {costForTwoMessage}
+        </p>
+      </div>
       <button
+        className="px-4 py-2 bg-green-100 m-4 rounded-lg"
         onClick={() => {
           setToggleBtn(!toggleBtn);
         }}
@@ -73,7 +76,9 @@ const RestaurantMenu = () => {
         Veg Only
       </button>
       <h2>Menu</h2>
-      <ul>{vegMenu()}</ul>
+      <div className="m-4 p-4 rounded-lg bg-gray-100">
+        <ul className="px-4">{vegMenu()}</ul>
+      </div>
     </div>
   );
 };

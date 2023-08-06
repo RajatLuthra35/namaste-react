@@ -1,0 +1,8 @@
+TAILWIND CSS
+
+go to site then go to framework guide to install according to your framework, our framework is parcel.
+Tailwind css behind the css uses POSTCSS, POSTCSS is a tool for transforming CSS with javaScript.
+so we need to add configuration file for POSTCSS in our project, so we will make a configuration file in our project.
+
+if you want to use tailwind, so parcel need to use postcss to understand tailwind css thats y we made .postcssrc. and now we need to make some changes in tailwind.config.js file. 
+we need to add in content [] which will contain type of all the file were tailwind css can be used.
