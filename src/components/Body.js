@@ -2,13 +2,19 @@ import RestaurantCard from "./RestaurantCard";
 import { useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
+import useRestaurant from "../utils/useRestaurant";
+import useOnlineStatus from "../utils/useOnlineStatus";
 const Body = () => {
+  /* 
+  -------------BEFORE CUSTOM HOOK--------------------
+
   const [listOfRestaurants, setListOfRestaurants] = useState([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
-  // if u dnt make filtered restaurants state so when you search once u will modify make list of restaurants and then if u search again u wont have all restuarants
-  //u will only have searched restaurants of before so u wont be able to search new restaurants, so we need to conserve the main list of restaurants and
-  //make another list of filtered list which has list all restaurants from api call.
-  const [searchText, setSearchText] = useState("");
+
+  if u dnt make filtered restaurants state so when you search once u will modify make list of restaurants and then if u search again u wont have all restuarants
+  u will only have searched restaurants of before so u wont be able to search new restaurants, so we need to conserve the main list of restaurants and
+  make another list of filtered list which has list all restaurants from api call.
+
 
   useEffect(() => {
     fetchData();
@@ -26,6 +32,20 @@ const Body = () => {
       json?.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle?.restaurants
     );
   };
+
+  */
+
+  // ---------------- CUSTOM HOOK--------------------
+  const listOfRestaurants = useRestaurant();
+  const filteredRestaurants = useRestaurant();
+  const onlineStatus = useOnlineStatus();
+
+  const [searchText, setSearchText] = useState("");
+
+  if (onlineStatus === false)
+    return (
+      <h1>Looks like you're offline!! Please check your internet connection</h1>
+    );
 
   return listOfRestaurants?.length === 0 ? (
     <Shimmer />

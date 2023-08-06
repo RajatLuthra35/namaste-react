@@ -1,0 +1,40 @@
+CUSTOM HOOKS
+
+We have a component RestaurantMenu which does 2 things fetching the restaurant data from api and then displaying it on webpage. We want it to do only one thing that is displaying the data on webpage.
+It do not need to worry about how data is coming. For this we will make a CUSTOM HOOK. Which will take resId as argument and provide the data to RestaurantMenu component.
+Hooks always start from "use".React comes to know from it that this a hook.
+Hook is nothing just a normal javaScript function.
+
+it sis not mandatory to start custom hook with use.It is advised to do this.
+
+Remember Bundler - it bundles all the file into one file thats provided to the browser - SO IS IT GOOD TO COMBINE ALL THE FILES TO ONE FILE?
+Answer - NO, as its size will be very high, more size less optimized it is.
+WE CANT SEND EACH AND EVERY FILE ALSO AS SIZE WILL BE LESS BUT IT WOULD BE A-LOT OF WORK FOR THE BROWSER. SO BOTH THE APPROACHES ARE NOT GOOD. SO WHAT WILL WE DO ??
+SOLUTION -  We will make small bundles of our files => This process is known as CHUNKING/CODE SPLITTING/LAZY LOADING/DYNAMIC BUNDLING. 
+A bundle should have appropriate code for a major feature of the project. Like this we will separate the bundles.
+
+SO we have added a component grocery imagine this is another vertical having n numbers of components, so we will now 2 bundles 1 from food delivery vertical another for grocery delivery vertical.
+QUESTION - HOW WE WILL DO IT?
+ANSWER - via lazy loading also called on-demand loading. When our web app start we have food delivery code and not grocery delivery code, grocery delivery code appears when we go on grocery tab on header.So initially we should not have
+grocery code until we go on grocery tab.So we will load grocery delivery code when required.
+
+we will import Grocery in App component differently.
+const Grocery = lazy(() => import("./components/Grocery"));         //here import used is different, its a function which take path of the required component as argument.
+lazy is provided by react as named imports which take callback function.
+
+Now when our web page loads it wont have grocery component code and when we will go on grocery tab another bundle will be made and code will be loaded.This all can be seen in developer console in network tab choose JS where we select fetch/XHR.
+So now we have separated our project into 2 bundles.
+
+It will throw an error when we try to go on grocery tab URL will change but we wont see anything. This has happened because when the bundler made the call to bring the code on-demand it took some time in milliseconds.
+But react is so fast that when we clicked on Grocery tab it tried to load the code but code was not there as bundler just made the call for code so React will give us an error that
+COMPONENT RENDERING SUSPENDED. To handle this react give us a component called SUSPENSE.To use suspense you need to wrap your component(<Grocery />) with it. Like this.
+ {
+    path: "/grocery",
+    element: (
+        <Suspense>
+        <Grocery />
+        </Suspense>
+    ),
+},
+When we will click on Grocery tab, code is not there so React want something to show on the screen but we have provided nothing as bundler just made the call so it will take time to bring the code but till then
+react want something to show during that time and we can give that inside FALLBACK in SUSPENSE as parameter. You can pass any component inside fallback. As fallback take JSX. You can send Shimmer or any tag or any component
