@@ -1,0 +1,248 @@
+FUNCTIONAL COMPONENT - Normal JavaScript function.
+CLASS BASED COMPONENT - Normal JavaScript class.
+
+QUESTION - How to tell react this is class based component?
+ANSWER - class UserClass extends React.Component{} this is the way we tell react that this is class based.
+first we write class then name of the component then extends React.component will make react know that this is class based component. This class based component always have a render function(render())
+which always return the JSX which will be displayed at UI.
+class UserClass extends React.Component{
+    render(){
+        return JSX;
+    }
+}
+this jsx will be converted to HTML and displayed at the webpage.
+
+QUESTION - What is React.Component ?
+ANSWER - It is basically a class given to us by react. and UserClass (class based component that we made) is inheriting some properties from it.So we need to import React.Component from react.
+
+In Functional component we use to pass props where component is called and received where function is defined using destructing on the top in the argument.
+
+const User = ({ name }) => {
+  return (
+    <div className="user-card">
+      <h2>Name: {name}</h2>
+      <h2>Location: Patiala</h2>
+      <h2>Contact: rajat@gmail.com</h2>
+    </div>
+  );
+};
+
+
+In Class based component CONSTRUCTOR receive the props.
+
+class UserClass extends React.Component {
+  constructor(props) {
+    super(props);       THIS IS VERY IMPORTANT TO WRITE, WITHOUT THIS IT WILL THROW AN ERROR. to use this property below to access props, we kinda need this -> DO VERIFY and RESEARCH.
+  }
+  render() {
+     return (
+      <div className="user-card">
+        <h2>Name: {this.props.name}</h2>
+        <h2>Location: Patiala</h2>
+        <h2>Contact: rajat@gmail.com</h2>
+      </div>
+    );
+  }
+}
+
+Whenever the above class is initialized or an instance of the class is created a constructor is called and the props is extracted.This is how we get props from parent component.
+
+Invoking a function component -> this means you are loading or mounting that function on to web page.
+Creating Instance of the class -> this means you Loading a class based component on to webpage.
+Whenever instance of the class is created that time constructor is called and this is the best place to receive props And THIS IS THE BEST PLACE TO CREATE STATE VARIABLES.
+SO IN CLASS BASED COMPONENT STATE VARIABLE IS CREATED IN CONSTRUCTOR. eg->
+constructor(props) {
+    super(props);
+    this.state = {          STATE is an BIG OBJECT
+      count: 0,
+    };
+  }
+this.state.count = this.state.count + 1; =>  NEVER DO THIS, NEVER UPDATE THE STATE VARIABLES DIRECTLY, IT WILL NOT UPDATE
+
+We update the class based state variable using this.setState({}) and an object is passed in this, which contain the updated object in it.
+
+this.setState({
+count: this.state.count + 1,
+});
+Whenever state will be updated react will re render the component.
+
+
+LIFECYCLE OF CLASS BASED COMPONENT.
+We have a parent component <About />, so when we load this component on the webpage so react goes line by line of this component then react sees there is a class based component, then
+it start loading/mounting the class based component on webpage. When react go on to that class based component to mount a NEW INSTANCE of the class based component is made.
+The FIRST THING when instance is made is THE CONSTRUCTOR is CALLED. ONCE CONSTRUCTOR IS CALLED THEN RENDER IS CALLED. FIRST CONSTRUCTOR THEN RENDER.
+In the above case, our parent component i.e About.js was functional component -> NOW LETS CHANGE THAT ALSO in Class base.
+
+NEW CASE -> parent component also is class based and components called inside it is also class based.
+Now Lifecycle will be PARENT CONSTRUCTOR -> PARENT RENDER -> CHILD CONSTRUCTOR -> CHILD RENDER.
+
+React class based component gives us an power thats componentDidMount() => VERY IMPORTANT.
+Firstly constructor -> render -> componentDidMount => THIS IS THE FLOW HOW THIS COMPONENT WILL BE CALLED. 
+IF parent also have componentDidMount and child also then WHAT IS THE FLOW? -> IMPORTANT QUESTION  
+PARENT CONSTRUCTOR -> PARENT RENDER -> CHILD CONSTRUCTOR -> CHILD RENDER -> CHILD componentDidMount -> PARENT componentDidMount
+SO componentDidMount is finally called when component have completely mounted, hence the name.
+
+QUESTION - WHY REACT HAVE GIVEN componentDidMount?
+ANSWER - There are some things we do after component is completely rendered, like make api call. best use case of componentDidMount is to make api call. -> only reason api call is made inside componentDidMount is
+that its called after constructor, render and then componentDidMount. as we dnt want react to wait for result of api call.
+
+NEW CASE -> Parent component is class based which has 2 class based component children, it can have many but for understanding we are using 2 here. What will be lifecycle now ??
+PARENT CONSTRUCTOR -> PARENT RENDER -> COMPONENT 1 CONSTRUCTOR -> COMPONENT 1 RENDER -> COMPONENT 1 componentDidMount -> COMPONENT 2 CONSTRUCTOR -> CONSTRUCTOR 2 RENDER -> COMPONENT 2 componentDidMount -> PARENT componentDidMount.
+AND THIS ORDER IS WRONG. THIS IS NOT HOW LIFECYCLE WORKS WHEN THERE ARE MULTIPLE CHILDREN.
+RIGHT CYCLE IS - 
+PARENT CONSTRUCTOR -> PARENT RENDER -> COMPONENT 1 CONSTRUCTOR -> COMPONENT 1 RENDER -> COMPONENT 2 CONSTRUCTOR -> CONSTRUCTOR 2 RENDER -> COMPONENT 1 componentDidMount -> COMPONENT 2 componentDidMount -> PARENT componentDidMount.
+QUESTION -> WHY THIS HAPPENED ?
+FOR THIS LETS UNDERSTAND REACT LIFECYCLE METHOD - REFER A DIAGRAM HERE -> https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/
+
+SO see the diagram , react lifecycle method has 2 phase
+1. Render phase -> include constructor calling and render calling
+2. Commit phase -> React update the DOM and refs and componentDidMount/componentDidUpdate etc are all called.
+
+Lets now see how the above case described works.
+<About /> class based component is mounting
+ - parent constructor called
+ - parent render called -> during render react see multiple class based component, we have written 2 class based component in parent class based component.
+    - child 1 constructor
+    - child 1 render    -> As there were multiple children so REACT WILL OPTIMIZE IT and react wont call componentDidMount of child 1 next BUT REACH WILL BATCH THE RENDER PHASE OF 2 CHILD. SO NOW THESE CHILDREN RENDER PHASE WILL HAPPEN TOGETHER AND AFTERWARDS CHILDREN COMMIT PHASE WILL HAPPEN.
+    - child 2 constructor
+    - child 2 render
+    - child 1 componentDidMount     -> componentDidMount of both children happen together as told above react have batched render phase together and commit phase together for multiple children for OPTIMIZING.
+    - child 2 componentDidMount
+ - parent componentDidMount 
+
+ REACT BATCH RENDER PHASE together as in commit phase react manipulate the DOM, and DOM manipulate is most expensive operation in react. so render phase is batched together and commit phase is batched together thus optimizing the code thus making react fast.
+ In Render phase diff algo is called reconcilisation algo works and everything happen in VIRTUAL DOM so its not expensive so render phased is batched together and called before commit phase. In commit phase actual DOM manipulation is done, which is expensive.
+ Render phase is very fast, commit phase take times.
+
+ - parent constructor called
+ - parent render called 
+
+    <RENDER PHASE BATCHED>
+
+        - child 1 constructor
+        - child 1 render    
+        - child 2 constructor
+        - child 2 render
+
+    <COMMIT PHASE BATCHED>
+
+        - child 1 componentDidMount    
+        - child 2 componentDidMount
+
+ - parent componentDidMount 
+
+
+ HOW TO MAKE API CALL IN CLASS BASED ?
+   async componentDidMount() {
+    const data = await fetch("https://api.github.com/users/RajatLuthra35");
+    const json = await data.json();
+  }
+in functional based we use to make a function and use async await to get data and use state variable to store it. In class based we can make componentDidMount async and use await inside it.
+
+Like we know, constructor is called, rendered is called, componentDidMount is called is MOUNTING.
+Now we have api call in componentDidMount, which will update the state like this,
+  async componentDidMount() {
+    const data = await fetch("https://api.github.com/users/RajatLuthra35");
+    const json = await data.json();
+    this.setState({
+      userInfo: json,
+    });
+}
+
+when state is updated in componentDidMount, UPDATING STARTS. => SEE THE DIAGRAM, in first column of MOUNTING, constructor called, render called, then componentDidMount called in that componentDidMount api is called
+at that point SECOND COLUMN in that diagram THAT IS UPDATING START. when setState is called react triggers the render once again (CONSTRUCTOR IS NOT CALLED, IT WAS CALLED ONLY ONCE IN THE STARTING) now the state has been updated 
+with the new value from api call now react will run diff algo and update the DOM with new value THEN UPDATE CYCLE SAYS componentDidUpdate will be called. componentDidUpdate is called after componentDidMount. This is how UPDATE CYCLE(second column in dia) works.
+
+------MOUNTING CYCLE ---------
+- Constructor called
+- Render called with initial state defined in constructor
+    <HTML Dummy MADE>
+- componentDidMount called
+    <API CALL>
+    <this.setState()> -> state variable updated
+    <trigger reconcilisation cycle in update cycle>
+
+------UPDATE CYCLE-------
+- Render called again with api data as state is updated
+    <HTML Loaded with new api data>
+- componentDidUpdate called
+
+THERE IS AN ANOTHER CYCLE -> componentWillUnMount
+UNMOUNT means when the component will disappear/unmounted from the webpage then componentWillUnMount will be called. This component will disappear/unmounted when we will go to a different page that time componentWillUnMount will be called.
+
+
+
+NEVER COMPARE LIFECYCLE METHOD OF CLASS BASED WITH FUNCTIONAL BASED.
+
+useEffect(()=>{}) => this will be called after every render.
+componentDidMount(){} => will only be called once when component is render, if state is updated, componentDidMount is not called.
+componentDidUpdate(){} => this is called if anything update in class based after initial render.This is called multiple time, componentDidMount is not called again and again.
+
+
+
+
+REACT IS A SINGLE PAGE APPLICATION< WHEN URL CHANGES WE ARE JUST CHANGING THE COMPONENT. DIFFERENT URL DOESN't MEAN DIFFERENT PAGES.
+
+IMAGINE WE HAVE componentDidMount() written like this.
+componentDidMount() {
+   this.setInterval(()=>{
+    console.log("Hello)
+   },1000)
+}
+We made changes in componentDidMount, we are logging hello after every second. WHAT WILL BE THE RESULT ?
+When we render this component, Hello will be consoled after every second. BUT THE MAIN ISSUE IS, EVEN IF YOU GO TO DIFFERENT URL, component will change on webpage BUT IN console Hello will still REMAIN GETTING CONSOLED AFTER EVERY second BECAUSE REACT IS SINGLE PAGE APPLICATION 
+SO THIS PROBLEM ARISE. As WHEN WE CHANGE THE URL, react is NOT REFRESHING, ITS JUST CHANGING THE COMPONENT. 
+AMAZING PROBLEM IS IF YOU GO BACK TO SAME PAGE WHERE THE ABOVE componentDidMount IS WRITTEN, REACT WILL AUTOMATICALLY MAKE ANOTHER setInterval AND TIME WILL BE INCREASED BY VALUE WE PROVIDE THAT IS 2 SECONDS NOW,
+GO AGAIN 3 SECS GAP, LIKEWISE TIME GETTING INCREASED AND YOU WILL NEVER KNOW, WHICH WILL EVENTUALLY DESTROY YOUR APP PERFORMANCE.
+THAT IS WHY WE NEED componentWillUnMount(){} => THIS IS THE USE-CASE OF componentDidUpdate(){}. SO WE CLEAN UP THE MESS in componentWillUnMount(){};
+componentWillUnMount(){
+    this.clearInterval();           // "this" is very important as we have binded clearInterval with above setInterval. "this" is shared between the entire component. 
+}
+this is we need to write in componentWillUnMount() it will kill the process we made in componentDidMount(). Now WHEN YOU WILL CHANGE URL YOUR setInterval WILL NO LONGER WILL PRINT HELLO.
+
+
+If we write setInterval in useEffect() then ??
+useEffect(()=>{
+    setInterval(()=>{
+        console.log("Hello");
+    })
+},[])
+Now if we change the url will it stop ??
+ANSWER -NOOOOOOOOOOOOO.  IT WONT STOP IF WE CHANGE THE URL, SAME BEHAVIOR WILL BE SEEN, IF YOU COME BACK TO COMPONENT WHERE THIS useEffect IS WRITTEN IT WILL INCREASE THE TIME, AS WE NEVER DESTROYED THE MESS WE MADE.
+TO DESTROY IT, U MUST REMEMBER useEffect SNIPPET.
+
+THIS IS ACTUALLY THE SNIPPET OF useEffect.
+useEffect(()=>{
+    return ()=>{}       // THIS IS USED TO DESTROY what we will in componentWillUnMount. => this function is called when you are unmounting.
+},[])
+
+in a component if we have like this,
+
+useEffect(()=>{
+    console.log("useEffect")
+
+
+    return()=>{
+        console.log("useEffect return")
+    }
+
+},[])
+console.log("render")
+
+WE WILL GET =>
+render
+useEffect
+<URL change>
+useEffect return
+
+now setInterval need to be cleared so,
+
+useEffect(()=>{
+    setInterval(()=>{
+        console.log("Hello");
+    })
+
+    return () => {
+        clearInterval();            // this will destroy the timer.
+    }
+},[])
