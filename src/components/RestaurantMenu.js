@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import RestaurantMenuItem from "./RestaurantMenuItem";
 import Shimmer from "./Shimmer";
-import { MENU_URL } from "../utils/constants";
 import useRestaurantMenu from "../utils/useRestaurantMenu";
+import RestaurantCategory from "./RestaurantCategory";
 
 const RestaurantMenu = () => {
   // const [resInfo, setResInfo] = useState(null);
   // const [resMenu, setResMenu] = useState(null);
   const [toggleBtn, setToggleBtn] = useState(false);
 
+  const [showIndex, setShowIndex] = useState(null);
   const { resId } = useParams();
 
   // useEffect(() => {
@@ -25,48 +25,28 @@ const RestaurantMenu = () => {
   //   );
   // };
   const resInfo = useRestaurantMenu(resId);
-  const resMenu =
-    resInfo?.cards[3]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card
-      ?.itemCards;
+  // const resMenu =
+  //   resInfo?.cards[3]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card
+  //     ?.itemCards;
+
+  const categories =
+    resInfo?.cards[3]?.groupedCard?.cardGroupMap?.REGULAR?.cards.filter(
+      (c) =>
+        c.card?.card?.["@type"] ===
+        "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
+    );
 
   if (resInfo === null) return <Shimmer />;
 
   const { name, cuisines, costForTwoMessage } =
     resInfo?.cards[0]?.card?.card?.info;
 
-  const iterateMenuItem = (value) => {
-    return value.map((item) => {
-      return (
-        <RestaurantMenuItem
-          key={item?.card?.info?.id}
-          id={item?.card?.info?.id}
-          name={item?.card?.info?.name}
-          price={item?.card?.info?.price / 100}
-          isVeg={item?.card?.info?.isVeg ? item?.card?.info?.isVeg : false}
-        />
-      );
-    });
-  };
-
-  const vegMenu = () => {
-    if (toggleBtn) {
-      const vegItems = resMenu.filter((item) => {
-        return item.card.info.isVeg;
-      });
-      return iterateMenuItem(vegItems);
-    } else {
-      return iterateMenuItem(resMenu);
-    }
-  };
-
   return (
-    <div className="menu">
-      <div className="m-4 p-4 rounded-lg bg-gray-100 hover:bg-gray-200">
-        <h1>{name}</h1>
-        <p>
-          {cuisines.join(", ")} - {costForTwoMessage}
-        </p>
-      </div>
+    <div className="text-center">
+      <h1 className="font-bold my-6 text-2xl">{name}</h1>
+      <p className="font-bold text-lg">
+        {cuisines.join(", ")} - {costForTwoMessage}
+      </p>
       <button
         className="px-4 py-2 bg-green-100 m-4 rounded-lg"
         onClick={() => {
@@ -75,10 +55,15 @@ const RestaurantMenu = () => {
       >
         Veg Only
       </button>
-      <h2>Menu</h2>
-      <div className="m-4 p-4 rounded-lg bg-gray-100">
-        <ul className="px-4">{vegMenu()}</ul>
-      </div>
+      {categories.map((category, index) => (
+        <RestaurantCategory
+          key={category?.card?.card?.title}
+          data={category?.card?.card}
+          toggleCLicked={toggleBtn}
+          showItems={index === showIndex ? true : false}
+          setShowIndex={() => setShowIndex(index)} // IMPORTANT THE WAY WE ARE SENDING i was sending both showIndex and setShowIndex separate and in RestaurantCategory i was doing setShowIndex(index) in handleClick as i had index and setShowIndex as props in that component, rather than we can directly do the way done right here.
+        />
+      ))}
     </div>
   );
 };

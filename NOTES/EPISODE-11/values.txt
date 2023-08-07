@@ -1,0 +1,116 @@
+HIGHER ORDER COMPONENT - It is a FUNCTION which takes a component and returns a component. END OF THE DAY ITS IS NORMAL JAVASCRIPT FUNCTION.
+
+
+in RestaurantCard we made higher order component ->
+export const withPromotedLabel = (RestaurantCard) => {
+  return () => {         // returning ()=>{} this is another component as component is normal javaScript function
+    return ()            // return () it is return JSX as a component return. 
+  };
+};
+This function take another component as props and return an another component(which is function at end of day), component return a JSX.
+so final function is,
+
+export const withPromotedLabel = (RestaurantCard) => {
+  return (props) => {
+    return (
+      <div>
+        <label>Promoted</label>
+        <RestaurantCard {...props} />
+      </div>
+    );
+  };
+};
+
+We have used this in Body.js as,
+const RestaurantCardPromoted = withPromotedLabel(RestaurantCard);  => withPromotedLabel is an higher order component as it take another component(RestaurantCard a component) as props and return another component i.e RestaurantCardPromoted.
+withPromotedLabel above is returning ->
+(props) => {
+    return (
+      <div>
+        <label>Promoted</label>
+        <RestaurantCard {...props} />
+      </div>
+    );
+  };
+THIS IS withPromotedLabel return. IT WILL BE RECEIVED in RestaurantCardPromoted.
+RestaurantCardPromoted will be used as <RestaurantCardPromoted />.
+If u remember RestaurantCard component use to take props, See <RestaurantCard resData={restaurant} /> now we need the same props as our higher order component return a upgraded version of RestaurantCard component so it also require same props.
+So we will use <RestaurantCardPromoted resData={restaurant} /> BUT THE QUESTION IS HOW WILL IT RECEIVE PROPS? IT WILL RECEIVE PROPS IN COMPONENT THAT THE HIGHER ORDER COMPONENT IS RETURNING.
+props used as shown below
+(props) => {
+    return (
+      <div>
+        <label>Promoted</label>
+        <RestaurantCard {...props} />           // props will be passed to component received in props like this.
+      </div>
+    );
+  };
+
+
+
+We made an component of <RestaurantCategory /> which has a state => const [showItems, setShowItems] = useState(false) so every category Header inside it maintain its own state as .map is used in its parent component(where <RestaurantCategory /> is defined) that is 
+<RestaurantMenu /> now what happen is when we click on one category of in RestaurantCategory component it opens and show the menu of that category and if open another category menu it shows that also but it does not close the menu of previously opened category 
+BECAUSE state is handled by RestaurantCategory. We want to make a feature in which user comes to and restaurant menu page, at that page there are several categories of menu like recommended, indian, chinese etc and if it click on its header underlying menu 
+of that category appear and if user go to another category in same menu, previous open underlying menu of category should close. TO DO THIS WE NEED TO GIVE STATE CONTROL TO ITS PARENT COMPONENT i.e <RestaurantMenu />. Rn control is in <RestaurantCategory /> so when
+one category menu is open , another category card do not know anything about it.
+
+THIS IS WHAT CONTROLLED AND UNCONTROLLED COMPONENT IS.
+
+Now <RestaurantCategory /> is controlled component as it is now controlled by its parent component <RestaurantMenu /> as now <RestaurantCategory /> is not maintaining its own state, its state is now controlled by <RestaurantMenu />. TILL <RestaurantCategory /> 
+has its own state it was UNCONTROLLED COMPONENT. There is no such definition for controlled and uncontrolled component, its just a philosophy.
+ONE IMPORTANT THING CONTROLLED COMPONENT DOESN'T MEAN THAT IT CANT HAVE STATE, like <RestaurantCategory /> can have different states but IT CAN NOT HAVE A MAIN STATE(BY WHICH CHILD COMPONENT CAN BE CONTROLLED/WHICH DOES THE MAJOR WORK).IF MAIN STATE (BY WHICH CHILD COMPONENT CAN BE CONTROLLED) OF A COMPONENT
+IS IN HAND OF ITS PARENT THEN ITS A CONTROLLED COMPONENT OTHERWISE UNCONTROLLED COMPONENT.
+
+
+
+CONTEXT API - GIVEN BY REACT, (Hook) IN-BUILD NO EXTERNAL LIBRARY NEEDED
+
+1.creating context in global file 
+
+import { createContext } from "react";
+
+const UserContext = createContext({
+  loggedInUser: "Default User",
+});
+
+export default UserContext;
+
+
+2.Creating context again in the app.js it will overwrite the default context made above. Both methods are valid and can be done.
+<UserContext.Provider value={{ loggedInUser: "Rajat" }}>
+      <div className="app">
+        <Header />
+        <Outlet />
+      </div>
+</UserContext.Provider>
+
+3. Nested context
+<UserContext.Provider value={{ loggedInUser: "Rajat" }}>
+      <div className="app">
+        <UserContext.Provider value={{ loggedInUser: "Elon Musk" }}>
+          <Header />
+        </UserContext.Provider>
+        <Outlet />
+      </div>
+    </UserContext.Provider>
+  );
+
+Rajat wala context will over-write Default User wala context, Elon Musk wala context will overwrite Rajat wala context. Header mei Elon Musk dikheyga but purri app mei Rajat.
+
+
+TO USE CONTEXT MADE.
+
+1. In Function component
+
+  const data = useContext(UserContext);
+
+2. Class based component
+
+<UserContext.Consumer>
+  {({ loggedInUser }) => (
+    <h1 className="font-bold">{loggedInUser}</h1>
+  )}
+</UserContext.Consumer>
+
+
+REDUX IS EXTERNAL STATE MANAGEMENT LIBRARY.
