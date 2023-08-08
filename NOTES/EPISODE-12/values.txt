@@ -1,0 +1,28 @@
+REDUX TOOLKIT
+
+Redux is like a big global object that every component can access. Our Redux is so big and it do not become clumsy when there is a-lot of data so we will make slices in that store, just like almirah shelves we have.
+One slice can have user data, other slice can have CART data etc. BUT REMEMBER any component can not directly modify the data in the store. A procedure need to be followed to do this.
+Suppose we have a add to cart button and when its click value is increase in header in the cart element. This is done by redux using the procedure and the procedure is
+
+PROCEDURE - when add button is clicked it dispatches an ACTION then it calls a function(()=>{}) and this function internally modifies the cart. COMPONENT CANNOT DIRECTLY MODIFY THE DATA IN REDUX STORE.
+This function that we said above is known as REDUCER. SO FINALLY, WHEN ADD BUTTON IS CLICKED IT DISPATCHES AN ACTION WHICH CALLS THE REDUCER FUNCTION WHICH UPDATES THE "SLICE" OF THE REDUX STORE.
+
+ABOVE PROCESS IS TO WRITE DATA IN REDUX STORE NOW WE WILL SEE HOW TO READ DATA FROM REDUX STORE.
+
+To READ DATA FROM REDUX - Selector is used to read the data from redux store and use in any component. This process is called SUBSCRIBING TO THE STORE. As our selector is subscribed to the store so
+as soon as data will change in redux store it will auto magically change the relevant data in the component where it was used.
+
+
+NOW LETS BUILD THE STORE.
+- Install @reduxjs/toolkit and react-redux
+- Build our store                                           -> in utilis -> appStore.js
+- Connect our store to our app (kinda bridge)
+- Slice (cartSlice)
+- dispatch (action)
+- Selector
+
+
+
+Older redux use to say NEVER MUTATE THE STATE thats y we use to make copy of our state by ...state and then use to perform actions on it.
+Redux toolkit says you can directly mutate the state so we do not make copy of our state now we directly change the state.
+REDUX TOOLKIT IMMER JS(it is an library) behind the scenes.
